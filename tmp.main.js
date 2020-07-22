@@ -6,6 +6,21 @@ const options = {
   serviceNowTable: 'change_request'
 };
 
+
+/**
+ * Import the Node.js request package.
+ * See https://www.npmjs.com/package/request
+ */
+const request = require('request');
+
+
+// We'll use this regular expression to verify REST API's HTTP response status code.
+const validResponseRegex = /(2\d\d)/;
+
+// Use JSDoc to create a JSDoc data type for an IAP callback.
+// Call the new type iapCallback.
+// Notice iapCallback is a data-first callback.
+
 // Import built-in Node.js package path.
 const path = require('path');
 
@@ -23,19 +38,23 @@ const ServiceNowConnector = require(path.join(__dirname, './connector.js'));
  *   and tests the object's get and post methods.
  */
 function mainOnObject() {
+  // Instantiate an object from class ServiceNowConnector.
   const connector = new ServiceNowConnector(options);
-  connector.get((data, error) => {
+  // Test the object's get and post methods.
+  // You must write the arguments for get and post.
+  connector.get({ serviceNowTable: 'change_request' }, (data, error) => {
     if (error) {
       console.error(`\nError returned from GET request:\n${JSON.stringify(error)}`);
     }
     console.log(`\nResponse returned from GET request:\n${JSON.stringify(data)}`)
   });
-  connector.post((data, error) => {
+  connector.post({ serviceNowTable: 'change_request' }, (data, error) => {
     if (error) {
-      console.error(`\nError returned from GET request:\n${JSON.stringify(error)}`);
+      console.error(`\nError returned from POST request:\n${JSON.stringify(error)}`);
     }
-    console.log(`\nResponse returned from GET request:\n${JSON.stringify(data)}`)
+    console.log(`\nResponse returned from POST request:\n${JSON.stringify(data)}`)
   });
+
 }
 
 // Call mainOnObject to run it.
