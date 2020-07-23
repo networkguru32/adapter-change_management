@@ -159,7 +159,23 @@ class ServiceNowAdapter extends EventEmitter {
      * get() takes a callback function.
      */
     this.connector.get((data, error) => {
-        callback(`${JSON.stringify(data)}`, error);
+        const dataJson = JSON.parse(`${JSON.stringify(data)}`);
+        if (dataJson.body) {
+            const bodyJson = `${JSON.stringify(dataJson.body[0])}`;
+            const retJson = {
+                change_ticket_number: dataJson.body.number,
+                active: dataJson.body.active,
+                priority: dataJson.body.priority,
+                description: dataJson.body.description,
+                work_start: dataJson.body.work_start,
+                work_end: dataJson.body.work_end,
+                sys_id: dataJson.body.sys_id,
+            };
+            log.info('Here is the message');
+            log.info(bodyJson);
+        }
+        log.info(dataJson.number);
+        callback(dataJson, error);
     });
   }
 
