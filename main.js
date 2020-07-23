@@ -96,7 +96,13 @@ class ServiceNowAdapter extends EventEmitter {
   healthcheck(callback) {
     // We will build this method in a later lab. For now, it will emulate
     // a healthy integration by emmitting ONLINE.
-    this.emitOnline();
+    this.getRecord((data, error) => {
+        if (error) {
+            this.emitOffline();
+        } else {
+            this.emitOnline()
+        }
+    });
   }
 
   /**
@@ -152,12 +158,8 @@ class ServiceNowAdapter extends EventEmitter {
      * Note how the object was instantiated in the constructor().
      * get() takes a callback function.
      */
-    const connector = new ServiceNowConnector(options);
-    connector.get((data, error) => {
-      if (error) {
-        console.error(`\nError returned from GET request:\n${JSON.stringify(error)}`);
-      }
-    console.log(`\nResponse returned from GET request:\n${JSON.stringify(data)}`)
+    this.connector.get((data, error) => {
+        callback(`${JSON.stringify(data)}`, error);
     });
   }
 
@@ -177,11 +179,8 @@ class ServiceNowAdapter extends EventEmitter {
      * Note how the object was instantiated in the constructor().
      * post() takes a callback function.
      */
-    connector.post((data, error) => {
-      if (error) {
-        console.error(`\nError returned from GET request:\n${JSON.stringify(error)}`);
-      }
-      console.log(`\nResponse returned from GET request:\n${JSON.stringify(data)}`)
+    this.connector.post((data, error) => {
+        callback(`${JSON.stringify(data)}`, error);
     });
   }
 }
